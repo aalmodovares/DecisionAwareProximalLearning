@@ -1,0 +1,54 @@
+{
+  "study": {
+    "name": "wu2024_nonadditive_weighted_dfpv_weighting_factual_rmse_optuna",
+    "max_trials": 50,
+    "direction": "minimize",
+    "metric": "validation_factual_rmse"
+  },
+  "fixed": {
+    "data.version": "wu2024_nonadditive",
+    "data.structure_type": "single_peaked_heterogeneous",
+    "data.nonadditive_confounding_gamma": 0.7,
+    "data.n_train": 3000,
+    "data.n_test": 1000,
+
+    "dfpv.lam1": 0.3,
+    "dfpv.lam2": 0.001,
+    "dfpv.stage1_iter": 20,
+    "dfpv.stage2_iter": 1,
+    "dfpv.epochs": 2000,
+    "dfpv.min_epochs": 100,
+    "dfpv.early_stop_patience": 80,
+    "dfpv.hidden_dims": [32],
+    "dfpv.feature_dim": 4,
+    "dfpv.activation": "elu",
+    "dfpv.lr": 0.001,
+    "dfpv.weight_decay": 1e-05,
+
+    "mean_dfpv.method": "pseudo_outcomes",
+    "mean_dfpv.use_treatment_grid": true,
+    "mean_dfpv.treatment_grid_size": 51
+  },
+  "search": {
+    "common": {},
+    "per_model": {
+      "weighted_dfpv": {
+        "weighting.lam": {
+          "type": "logfloat",
+          "low": 0.2,
+          "high": 20.0
+        },
+        "weighting.tau": {
+          "type": "logfloat",
+          "low": 0.02,
+          "high": 2.0
+        },
+        "weighting.n_rounds": {
+          "type": "categorical",
+          "choices": [2, 3, 4, 5]
+        }
+      }
+    }
+  }
+}
+

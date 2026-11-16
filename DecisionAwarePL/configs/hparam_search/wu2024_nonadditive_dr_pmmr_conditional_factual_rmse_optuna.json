@@ -1,0 +1,58 @@
+{
+  "study": {
+    "name": "wu2024_nonadditive_dr_pmmr_conditional_factual_rmse_optuna",
+    "max_trials": 50,
+    "direction": "minimize",
+    "metric": "validation_factual_rmse"
+  },
+  "fixed": {
+    "data.version": "wu2024_nonadditive",
+    "data.structure_type": "single_peaked_heterogeneous",
+    "data.nonadditive_confounding_gamma": 0.7,
+    "data.n_train": 3000,
+    "data.n_test": 1000,
+    "mean_pmmr.method": "pseudo_outcomes",
+    "mean_pmmr.use_treatment_grid": true,
+    "mean_pmmr.treatment_grid_size": 51,
+    "dr_pmmr_conditional.optimize_internal": false,
+    "dr_pmmr_conditional.stage1_perc": 0.5,
+    "dr_pmmr_conditional.max_train_size": 1000,
+    "dr_pmmr_conditional.prediction_batch_size": 512,
+    "dr_pmmr_conditional.standardize": true
+  },
+  "search": {
+    "common": {},
+    "per_model": {
+      "dr_pmmr_conditional": {
+        "dr_pmmr_conditional.pmmr_lambda": {
+          "type": "categorical",
+          "choices": [0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.kap_lambda": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.kap_eta": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.kap_lambda2": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.kap_zeta": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.lambda_dr": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.kernel_variance_scale": {
+          "type": "categorical",
+          "choices": [0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "study": {
+    "name": "semisynthetic_tcga_v1_proximal_weighting_factual_rmse_optuna",
+    "max_trials": 50,
+    "direction": "minimize",
+    "metric": "validation_factual_rmse"
+  },
+  "fixed": {
+    "data.version": "semisynthetic_tcga",
+    "data.structure_type": "v1",
+    "data.n_train": 3000,
+    "data.n_val": 0,
+    "data.n_test": 1000,
+    "data.nonadditive_confounding_gamma": 0.7,
+
+    "mean_pmmr.method": "pseudo_outcomes",
+    "mean_pmmr.use_treatment_grid": true,
+    "mean_pmmr.treatment_grid_size": 51,
+    "mean_kpv.method": "pseudo_outcomes",
+    "mean_kpv.use_treatment_grid": true,
+    "mean_kpv.treatment_grid_size": 51,
+    "mean_dfpv.method": "pseudo_outcomes",
+    "mean_dfpv.use_treatment_grid": true,
+    "mean_dfpv.treatment_grid_size": 51,
+    "mean_nmmr_u.method": "pseudo_outcomes",
+    "mean_nmmr_u.use_treatment_grid": true,
+    "mean_nmmr_u.treatment_grid_size": 51,
+    "mean_nmmr_v.method": "pseudo_outcomes",
+    "mean_nmmr_v.use_treatment_grid": true,
+    "mean_nmmr_v.treatment_grid_size": 51,
+
+    "pmmr.ridge": 0.05,
+    "pmmr.awx_scale": 3.0,
+    "pmmr.azx_scale": 1.5,
+
+    "kpv.lambda1": 0.0001,
+    "kpv.lambda2": 0.001,
+    "kpv.optimize_lambda1": false,
+    "kpv.optimize_lambda2": false,
+    "kpv.split_ratio": 0.5,
+    "kpv.max_train_size": null,
+    "kpv.kernel_variance_scale": 2.0,
+
+    "dfpv.lam1": 0.3,
+    "dfpv.lam2": 0.001,
+    "dfpv.stage1_iter": 20,
+    "dfpv.stage2_iter": 1,
+    "dfpv.epochs": 2000,
+    "dfpv.min_epochs": 100,
+    "dfpv.early_stop_patience": 80,
+    "dfpv.split_ratio": 0.5,
+    "dfpv.max_train_size": 3000,
+    "dfpv.hidden_dims": [32],
+    "dfpv.feature_dim": 4,
+    "dfpv.activation": "elu",
+    "dfpv.lr": 0.001,
+    "dfpv.weight_decay": 0.00001,
+    "dfpv.standardize": true,
+    "dfpv.include_covariates": true,
+
+    "nmmr_u.hidden_dims": [64, 64],
+    "nmmr_u.activation": "silu",
+    "nmmr_u.bridge_all_data": true,
+    "nmmr_u.deactivate_rolloff": true,
+    "nmmr_u.product_kernel": true,
+    "nmmr_u.a_scale": 1.0,
+    "nmmr_u.z_scale": 1.0,
+    "nmmr_u.x_scale": 1.0,
+    "nmmr_u.quadratic_treatment": true,
+    "nmmr_u.lr": 0.001,
+    "nmmr_u.weight_decay": 0.00000001,
+    "nmmr_u.epochs": 2000,
+    "nmmr_u.min_epochs": 75,
+    "nmmr_u.early_stop_patience": 60,
+    "nmmr_u.batch_size": "all",
+    "nmmr_u.loss_name": "U_statistic",
+    "nmmr_u.azx_scale": 0.6,
+    "nmmr_u.grad_clip_norm": 3.0,
+
+    "nmmr_v.hidden_dims": [64, 64],
+    "nmmr_v.activation": "silu",
+    "nmmr_v.bridge_all_data": true,
+    "nmmr_v.deactivate_rolloff": true,
+    "nmmr_v.product_kernel": true,
+    "nmmr_v.a_scale": 1.0,
+    "nmmr_v.z_scale": 1.0,
+    "nmmr_v.x_scale": 1.0,
+    "nmmr_v.quadratic_treatment": true,
+    "nmmr_v.lr": 0.0003,
+    "nmmr_v.weight_decay": 0.000001,
+    "nmmr_v.epochs": 2000,
+    "nmmr_v.min_epochs": 75,
+    "nmmr_v.early_stop_patience": 60,
+    "nmmr_v.batch_size": "all",
+    "nmmr_v.loss_name": "V_statistic",
+    "nmmr_v.azx_scale": 0.4,
+    "nmmr_v.grad_clip_norm": 5.0,
+
+    "weighting.root_weights": false,
+    "weighting.weight_mean_regressor": false,
+    "weighting.warm_start": true,
+    "weighting.truncated_kernel_weights": true,
+    "weighting.normalization_mode": "paper_normalization",
+    "weighting.normalize_grid_size": 1000,
+    "weighting.stabilized": true,
+    "weighting.early_stop_patience": 30,
+    "weighting.min_improvement": 0.0001,
+    "weighting.clip_min": 0.05,
+    "weighting.clip_max": 20.0
+  },
+  "search": {
+    "common": {},
+    "per_model": {
+      "weighted_pmmr": {
+        "weighting.lam": {
+          "type": "logfloat",
+          "low": 0.2,
+          "high": 20.0
+        },
+        "weighting.tau": {
+          "type": "logfloat",
+          "low": 0.02,
+          "high": 2.0
+        },
+        "weighting.n_rounds": {
+          "type": "categorical",
+          "choices": [2, 3, 4, 5]
+        }
+      },
+      "weighted_kpv": {
+        "weighting.lam": {
+          "type": "logfloat",
+          "low": 0.2,
+          "high": 20.0
+        },
+        "weighting.tau": {
+          "type": "logfloat",
+          "low": 0.02,
+          "high": 2.0
+        },
+        "weighting.n_rounds": {
+          "type": "categorical",
+          "choices": [2, 3, 4, 5]
+        }
+      },
+      "weighted_dfpv": {
+        "weighting.lam": {
+          "type": "logfloat",
+          "low": 0.2,
+          "high": 20.0
+        },
+        "weighting.tau": {
+          "type": "logfloat",
+          "low": 0.02,
+          "high": 2.0
+        },
+        "weighting.n_rounds": {
+          "type": "categorical",
+          "choices": [2, 3, 4, 5]
+        }
+      },
+      "weighted_nmmr_u": {
+        "weighting.lam": {
+          "type": "logfloat",
+          "low": 0.2,
+          "high": 20.0
+        },
+        "weighting.tau": {
+          "type": "logfloat",
+          "low": 0.02,
+          "high": 2.0
+        },
+        "weighting.n_rounds": {
+          "type": "categorical",
+          "choices": [2, 3, 4, 5]
+        }
+      },
+      "weighted_nmmr_v": {
+        "weighting.lam": {
+          "type": "logfloat",
+          "low": 0.2,
+          "high": 20.0
+        },
+        "weighting.tau": {
+          "type": "logfloat",
+          "low": 0.02,
+          "high": 2.0
+        },
+        "weighting.n_rounds": {
+          "type": "categorical",
+          "choices": [2, 3, 4, 5]
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,11 @@
+# Local datasets and generated experiment artifacts
+/datasets/
+/results/
+/outputs/
+/search_results/
+
+# Generated LaTeX snippets and documents
+*.tex
+
+# PyCharm / JetBrains project metadata
+.idea/

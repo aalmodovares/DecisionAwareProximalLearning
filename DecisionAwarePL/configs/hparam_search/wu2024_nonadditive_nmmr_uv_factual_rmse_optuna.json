@@ -1,0 +1,76 @@
+{
+  "study": {
+    "name": "wu2024_nonadditive_nmmr_uv_factual_rmse_optuna",
+    "max_trials": 100,
+    "direction": "minimize",
+    "metric": "validation_factual_rmse"
+  },
+  "fixed": {
+    "data.version": "wu2024_nonadditive",
+    "data.structure_type": "single_peaked_heterogeneous",
+    "data.nonadditive_confounding_gamma": 0.7,
+    "data.n_train": 3000,
+    "data.n_test": 1000,
+
+    "mean_nmmr_u.method": "pseudo_outcomes",
+    "mean_nmmr_u.use_treatment_grid": true,
+    "mean_nmmr_u.treatment_grid_size": 51,
+
+    "mean_nmmr_v.method": "pseudo_outcomes",
+    "mean_nmmr_v.use_treatment_grid": true,
+    "mean_nmmr_v.treatment_grid_size": 51,
+
+    "nmmr_u.loss_name": "U_statistic",
+    "nmmr_v.loss_name": "V_statistic"
+  },
+  "search": {
+    "common": {},
+    "per_model": {
+      "nmmr_u": {
+        "nmmr_u.activation": {
+          "type": "categorical",
+          "choices": ["relu", "elu", "silu"]
+        },
+        "nmmr_u.product_kernel": {
+          "type": "categorical",
+          "choices": [false, true]
+        },
+        "nmmr_u.azx_scale": {
+          "type": "categorical",
+          "choices": [0.3, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0]
+        },
+        "nmmr_u.hidden_dims": {
+          "type": "categorical",
+          "choices": [[32, 32], [64, 64], [64, 64, 64]]
+        },
+        "nmmr_u.lr": {
+          "type": "categorical",
+          "choices": [0.00003, 0.0001, 0.0003, 0.001]
+        }
+      },
+      "nmmr_v": {
+        "nmmr_v.activation": {
+          "type": "categorical",
+          "choices": ["relu", "elu", "silu"]
+        },
+        "nmmr_v.product_kernel": {
+          "type": "categorical",
+          "choices": [false, true]
+        },
+        "nmmr_v.azx_scale": {
+          "type": "categorical",
+          "choices": [0.3, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0]
+        },
+        "nmmr_v.hidden_dims": {
+          "type": "categorical",
+          "choices": [[32, 32], [64, 64], [64, 64, 64]]
+        },
+        "nmmr_v.lr": {
+          "type": "categorical",
+          "choices": [0.00003, 0.0001, 0.0003, 0.001]
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,59 @@
+{
+  "study": {
+    "name": "wu2024_nonadditive_decaflow_observational_loss_optuna",
+    "max_trials": 50,
+    "direction": "minimize",
+    "metric": "validation_observational_loss"
+  },
+  "fixed": {
+    "data.version": "wu2024_nonadditive",
+    "data.structure_type": "single_peaked_heterogeneous",
+    "data.nonadditive_confounding_gamma": 0.7,
+    "data.n_train": 3000,
+    "data.n_test": 1000,
+    "decaflow.flow_type": "nsf",
+    "decaflow.regularize": true,
+    "decaflow.warmup": 50,
+    "decaflow.epochs": 300,
+    "decaflow.min_epochs": 30,
+    "decaflow.early_stop_patience": 30,
+    "decaflow.batch_size": 256,
+    "decaflow.prediction_batch_size": 256,
+    "decaflow.interventional_mc_samples": 64
+  },
+  "search": {
+    "common": {},
+    "per_model": {
+      "decaflow": {
+        "decaflow.latent_dim": {
+          "type": "categorical",
+          "choices": [2, 4]
+        },
+        "decaflow.encoder_hidden_features": {
+          "type": "categorical",
+          "choices": [[32], [64], [32, 32], [64, 64]]
+        },
+        "decaflow.decoder_hidden_features": {
+          "type": "categorical",
+          "choices": [[32], [64], [32, 32], [64, 64]]
+        },
+        "decaflow.conditioner_hidden_features": {
+          "type": "categorical",
+          "choices": [[16], [32]]
+        },
+        "decaflow.activation": {
+          "type": "categorical",
+          "choices": ["relu", "elu", "silu"]
+        },
+        "decaflow.lr": {
+          "type": "categorical",
+          "choices": [0.0003, 0.001, 0.003]
+        },
+        "decaflow.weight_decay": {
+          "type": "categorical",
+          "choices": [0.0, 0.00001, 0.0001]
+        }
+      }
+    }
+  }
+}

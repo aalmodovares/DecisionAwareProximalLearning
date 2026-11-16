@@ -1,0 +1,237 @@
+{
+  "study": {
+    "name": "semisynthetic_tcga_v1_proximal_unweighted_factual_rmse_optuna",
+    "max_trials": 50,
+    "direction": "minimize",
+    "metric": "validation_factual_rmse"
+  },
+  "fixed": {
+    "data.version": "semisynthetic_tcga",
+    "data.structure_type": "v1",
+    "data.n_train": 3000,
+    "data.n_val": 0,
+    "data.n_test": 1000,
+    "data.nonadditive_confounding_gamma": 0.7,
+
+    "mean_pmmr.method": "pseudo_outcomes",
+    "mean_pmmr.use_treatment_grid": true,
+    "mean_pmmr.treatment_grid_size": 51,
+
+    "mean_kpv.method": "pseudo_outcomes",
+    "mean_kpv.use_treatment_grid": true,
+    "mean_kpv.treatment_grid_size": 51,
+    "kpv.optimize_lambda1": false,
+    "kpv.optimize_lambda2": false,
+    "kpv.split_ratio": 0.5,
+    "kpv.max_train_size": 1500,
+
+    "mean_dfpv.method": "pseudo_outcomes",
+    "mean_dfpv.use_treatment_grid": true,
+    "mean_dfpv.treatment_grid_size": 51,
+    "mean_dfpv.lr": 0.0003,
+    "mean_dfpv.batch_size": 512,
+    "dfpv.stage1_iter": 20,
+    "dfpv.stage2_iter": 1,
+    "dfpv.epochs": 800,
+    "dfpv.min_epochs": 100,
+    "dfpv.early_stop_patience": 80,
+    "dfpv.split_ratio": 0.5,
+    "dfpv.max_train_size": 3000,
+    "dfpv.standardize": true,
+    "dfpv.include_covariates": true,
+
+    "mean_nmmr_u.method": "pseudo_outcomes",
+    "mean_nmmr_u.use_treatment_grid": true,
+    "mean_nmmr_u.treatment_grid_size": 51,
+    "nmmr_u.loss_name": "U_statistic",
+
+    "mean_nmmr_v.method": "pseudo_outcomes",
+    "mean_nmmr_v.use_treatment_grid": true,
+    "mean_nmmr_v.treatment_grid_size": 51,
+    "nmmr_v.loss_name": "V_statistic",
+
+    "dr_kpv.optimize_internal": false,
+    "dr_kpv.stage1_perc": 0.5,
+    "dr_kpv.max_train_size": 1000,
+    "dr_kpv.prediction_batch_size": 512,
+    "dr_kpv.standardize": true,
+
+    "dr_pmmr_conditional.optimize_internal": false,
+    "dr_pmmr_conditional.stage1_perc": 0.5,
+    "dr_pmmr_conditional.max_train_size": 1000,
+    "dr_pmmr_conditional.prediction_batch_size": 512,
+    "dr_pmmr_conditional.standardize": true
+  },
+  "search": {
+    "common": {},
+    "per_model": {
+      "pmmr": {
+        "pmmr.ridge": {
+          "type": "categorical",
+          "choices": [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0]
+        },
+        "pmmr.awx_scale": {
+          "type": "categorical",
+          "choices": [0.3, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 3.0, 3.5, 4.0]
+        },
+        "pmmr.azx_scale": {
+          "type": "categorical",
+          "choices": [0.3, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0]
+        }
+      },
+      "kpv": {
+        "kpv.lambda1": {
+          "type": "categorical",
+          "choices": [0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1]
+        },
+        "kpv.lambda2": {
+          "type": "categorical",
+          "choices": [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "kpv.kernel_variance_scale": {
+          "type": "categorical",
+          "choices": [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0]
+        }
+      },
+      "dfpv": {
+        "dfpv.lam1": {
+          "type": "categorical",
+          "choices": [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dfpv.lam2": {
+          "type": "categorical",
+          "choices": [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dfpv.hidden_dims": {
+          "type": "categorical",
+          "choices": [[32], [64], [32, 32], [64, 64], [128, 128]]
+        },
+        "dfpv.feature_dim": {
+          "type": "categorical",
+          "choices": [4, 8, 16]
+        },
+        "dfpv.activation": {
+          "type": "categorical",
+          "choices": ["relu", "elu", "tanh"]
+        },
+        "dfpv.lr": {
+          "type": "categorical",
+          "choices": [0.0003, 0.001, 0.003]
+        },
+        "dfpv.weight_decay": {
+          "type": "categorical",
+          "choices": [0.0, 0.00001, 0.0001, 0.001, 0.01]
+        }
+      },
+      "nmmr_u": {
+        "nmmr_u.activation": {
+          "type": "categorical",
+          "choices": ["relu", "elu", "silu"]
+        },
+        "nmmr_u.product_kernel": {
+          "type": "categorical",
+          "choices": [false, true]
+        },
+        "nmmr_u.azx_scale": {
+          "type": "categorical",
+          "choices": [0.3, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0]
+        },
+        "nmmr_u.hidden_dims": {
+          "type": "categorical",
+          "choices": [[32, 32], [64, 64], [64, 64, 64]]
+        },
+        "nmmr_u.lr": {
+          "type": "categorical",
+          "choices": [0.00003, 0.0001, 0.0003, 0.001]
+        }
+      },
+      "nmmr_v": {
+        "nmmr_v.activation": {
+          "type": "categorical",
+          "choices": ["relu", "elu", "silu"]
+        },
+        "nmmr_v.product_kernel": {
+          "type": "categorical",
+          "choices": [false, true]
+        },
+        "nmmr_v.azx_scale": {
+          "type": "categorical",
+          "choices": [0.3, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0]
+        },
+        "nmmr_v.hidden_dims": {
+          "type": "categorical",
+          "choices": [[32, 32], [64, 64], [64, 64, 64]]
+        },
+        "nmmr_v.lr": {
+          "type": "categorical",
+          "choices": [0.00003, 0.0001, 0.0003, 0.001]
+        }
+      },
+      "dr_kpv": {
+        "dr_kpv.kpv_lambda1": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_kpv.kpv_lambda2": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_kpv.kap_lambda": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_kpv.kap_eta": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_kpv.kap_lambda2": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_kpv.kap_zeta": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_kpv.lambda_dr": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_kpv.kernel_variance_scale": {
+          "type": "categorical",
+          "choices": [0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5]
+        }
+      },
+      "dr_pmmr_conditional": {
+        "dr_pmmr_conditional.pmmr_lambda": {
+          "type": "categorical",
+          "choices": [0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.kap_lambda": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.kap_eta": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.kap_lambda2": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.kap_zeta": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.lambda_dr": {
+          "type": "categorical",
+          "choices": [0.00001, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dr_pmmr_conditional.kernel_variance_scale": {
+          "type": "categorical",
+          "choices": [0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5]
+        }
+      }
+    }
+  }
+}
+

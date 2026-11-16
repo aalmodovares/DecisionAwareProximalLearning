@@ -1,0 +1,88 @@
+{
+  "study": {
+    "name": "wu2024_nonadditive_kpv_dfpv_factual_rmse_optuna",
+    "max_trials": 50,
+    "direction": "minimize",
+    "metric": "validation_factual_rmse"
+  },
+  "fixed": {
+    "data.version": "wu2024_nonadditive",
+    "data.structure_type": "single_peaked_heterogeneous",
+    "data.nonadditive_confounding_gamma": 0.7,
+    "data.n_train": 3000,
+    "data.n_test": 1000,
+
+    "mean_kpv.method": "pseudo_outcomes",
+    "mean_kpv.use_treatment_grid": true,
+    "mean_kpv.treatment_grid_size": 51,
+    "kpv.optimize_lambda1": false,
+    "kpv.optimize_lambda2": false,
+    "kpv.split_ratio": 0.5,
+    "kpv.max_train_size": 1500,
+
+    "mean_dfpv.method": "pseudo_outcomes",
+    "mean_dfpv.use_treatment_grid": true,
+    "mean_dfpv.treatment_grid_size": 51,
+    "mean_dfpv.lr": 0.0003,
+    "mean_dfpv.batch_size": 512,
+    "dfpv.stage1_iter": 20,
+    "dfpv.stage2_iter": 1,
+    "dfpv.epochs": 800,
+    "dfpv.min_epochs": 100,
+    "dfpv.early_stop_patience": 80,
+    "dfpv.split_ratio": 0.5,
+    "dfpv.max_train_size": 3000,
+    "dfpv.standardize": true,
+    "dfpv.include_covariates": true
+  },
+  "search": {
+    "common": {},
+    "per_model": {
+      "kpv": {
+        "kpv.lambda1": {
+          "type": "categorical",
+          "choices": [0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1]
+        },
+        "kpv.lambda2": {
+          "type": "categorical",
+          "choices": [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "kpv.kernel_variance_scale": {
+          "type": "categorical",
+          "choices": [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0]
+        }
+      },
+      "dfpv": {
+        "dfpv.lam1": {
+          "type": "categorical",
+          "choices": [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dfpv.lam2": {
+          "type": "categorical",
+          "choices": [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+        },
+        "dfpv.hidden_dims": {
+          "type": "categorical",
+          "choices": [[32], [64], [32, 32], [64,64], [128, 128]]
+        },
+        "dfpv.feature_dim": {
+          "type": "categorical",
+          "choices": [4, 8, 16]
+        },
+        "dfpv.activation": {
+          "type": "categorical",
+          "choices": ["relu", "elu", "tanh"]
+        },
+        "dfpv.lr": {
+          "type": "categorical",
+          "choices": [0.0003, 0.001, 0.003]
+        },
+        "dfpv.weight_decay": {
+          "type": "categorical",
+          "choices": [0.0, 0.00001, 0.0001, 0.001, 0.01]
+        }
+      }
+    }
+  }
+}
+
